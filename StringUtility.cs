@@ -21,6 +21,7 @@ namespace Clear
         string GetSubstring(string text, int startIndex, int count);
         string StripHTML(string htmlstring);
         string StripSymbols(string xstring);
+        string StripSymbolsAndHTML(string xstring);
         string TruncateString(string id);
     }
     public class StringUtility : IStringUtility
@@ -65,6 +66,9 @@ namespace Clear
                 .Replace("\"", string.Empty)
                 .Replace("#", string.Empty)
                 .Replace("*", string.Empty);
+
+        public string StripSymbolsAndHTML(string htmlstring) =>
+            StripSymbols(StripHTML(htmlstring));
 
         public string GetSubstring(string text, int startIndex) => text.Substring(startIndex);
 
