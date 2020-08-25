@@ -1,27 +1,23 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
+    <TargetFramework>netstandard2.1</TargetFramework>
     <Authors>Clearwox Systems</Authors>
     <Company>Clearwox Systems</Company>
     <Description>A set of general utilities suitable for any .net project. These utilities include, string, image, cryptography, http client, number base utility.</Description>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageProjectUrl>https://github.com/Clearwox/ClearTools/</PackageProjectUrl>
-    <PackageLicenseUrl>https://github.com/Clearwox/ClearTools/blob/master/LICENSE</PackageLicenseUrl>
+    <License>https://github.com/Clearwox/ClearTools/blob/master/LICENSE</License>
+    <RepositoryUrl>https://github.com/Clearwox/ClearTools/</RepositoryUrl>
     <Copyright>Copyright 2018</Copyright>
     <PackageTags />
-    <Version>2.1.7</Version>
+    <Version>2.1.12</Version>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Newtonsoft.Json" Version="12.0.2" />
-    <PackageReference Include="System.Drawing.Common" Version="4.5.1" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Reference Include="Newtonsoft.Json">
-      <HintPath>..\..\..\..\..\..\Program Files\dotnet\sdk\NuGetFallbackFolder\newtonsoft.json\10.0.1\lib\netstandard1.3\Newtonsoft.Json.dll</HintPath>
-    </Reference>
+    <PackageReference Include="Microsoft.Azure.Storage.Blob" Version="11.1.7" />
+    <!--<PackageReference Include="Newtonsoft.Json" Version="12.0.3" />-->
+    <PackageReference Include="System.Drawing.Common" Version="4.7.0" />
   </ItemGroup>
 
 </Project>

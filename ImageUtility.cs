@@ -14,7 +14,8 @@ namespace Clear
         string ConvertImageToBase64(Image image, ImageFormat format);
         Image CropImage(Bitmap source, int maxWidth, int maxHeight);
         Bitmap ResizeImage(Image image, int width, int height);
-        void SaveJpeg(string path, Image image, int quality);
+        void SaveJpegToFile(string path, Image image, int quality);
+        void SaveJpegToStream(MemoryStream stream, Image image, int quality);
         Image ScaleImage(Image image, int maxWidth, int maxHeight, ImageSizePref pref = ImageSizePref.None);
     }
     public class ImageUtility : IImageUtility
@@ -94,7 +95,7 @@ namespace Clear
             return destImage;
         }
 
-        public void SaveJpeg(string path, Image image, int quality)
+        private (ImageCodecInfo, EncoderParameters) GetJpegCodecEncoder(int quality)
         {
             //ensure the quality is within the correct range
             if ((quality < 0) || (quality > 100))
@@ -106,7 +107,7 @@ namespace Clear
             }
 
             //create an encoder parameter for the image quality
-            EncoderParameter qualityParam = new EncoderParameter(System.Drawing.Imaging.Encoder.Quality, quality);
+            EncoderParameter qualityParam = new EncoderParameter(Encoder.Quality, quality);
             //get the jpeg codec
             ImageCodecInfo jpegCodec = ImageCodecInfo.GetImageEncoders().First(x => x.MimeType.ToLower() == "image/jpeg");
 
@@ -114,23 +115,34 @@ namespace Clear
             EncoderParameters encoderParams = new EncoderParameters(1);
             //set the quality parameter for the codec
             encoderParams.Param[0] = qualityParam;
+
             //save the image using the codec and the parameters
-            image.Save(path, jpegCodec, encoderParams);
+            return (jpegCodec, encoderParams);
+        }
+
+        public void SaveJpegToFile(string path, Image image, int quality)
+        {
+            var jpegCodecEncoder = GetJpegCodecEncoder(quality);
+            image.Save(path, jpegCodecEncoder.Item1, jpegCodecEncoder.Item2);
+        }
+
+        public void SaveJpegToStream(MemoryStream stream, Image image, int quality)
+        {
+            var jpegCodecEncoder = GetJpegCodecEncoder(quality);
+            image.Save(stream, jpegCodecEncoder.Item1, jpegCodecEncoder.Item2);
         }
 
         public string ConvertImageToBase64(Image image, ImageFormat format)
         {
-            using (MemoryStream ms = new MemoryStream())
-            {
-                // convert image to byte[]
-                image.Save(ms, format);
-                byte[] imageBytes = ms.ToArray();
+            using MemoryStream ms = new MemoryStream();
+            // convert image to byte[]
+            image.Save(ms, format);
+            byte[] imageBytes = ms.ToArray();
 
-                // convert by to base64 string
-                string base64 = Convert.ToBase64String(imageBytes);
+            // convert by to base64 string
+            string base64 = Convert.ToBase64String(imageBytes);
 
-                return base64;
-            }
+            return base64;
         }
 
         public Image ConvertBase64ToImage(string base64)
